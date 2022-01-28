@@ -46,7 +46,7 @@ class InvoiceSeeder extends Seeder
 
                 $paymentStatus = (new PaymentStatus())->toArray();
 
-                $invoice->total = $products->sum('price');
+                $invoice->total = collect(array_values($data))->sum('subtotal');
                 $invoice->payment_status = $paymentStatus[random_int(0, 1)];
                 $invoice->customer()->associate($customer);
                 $invoice->user()->associate($user);
