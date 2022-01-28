@@ -13,6 +13,18 @@ class Product extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['slug', 'description', 'price'];
+
+    public function setDescriptionAttribute($value)
+    {
+        $this->attributes['description'] = ucfirst(strtolower($value));
+    }
+
+    public function getDescriptionAttribute($value)
+    {
+        return $this->attributes['description'] = strtoupper($value);
+    }
+
     public function category(): BelongsTo
     {
         return $this->belongsTo(ProductCategory::class, 'category_id');

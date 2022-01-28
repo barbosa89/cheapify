@@ -23,6 +23,11 @@ class ProductFactory extends Factory
             'slug' => Str::slug($description),
             'price' => $this->faker->randomNumber(5),
             'stock' => $this->faker->numberBetween(5, 20),
+            'maker' => json_encode([
+                'company' => $this->faker->company,
+                'country' => $this->faker->country,
+            ]),
+            'expired_at' => now()->addYear(),
             // 'category_id' => ProductCategory::factory()->create(),
             // 'user_id' => User::factory()->create(),
         ];

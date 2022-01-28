@@ -18,6 +18,9 @@ class CreateProductsTable extends Migration
             $table->string('slug');
             $table->string('description');
             $table->decimal('price', 10, 2);
+            $table->decimal('discount', 4, 2)->default(0);
+            $table->json('maker');
+            $table->date('expired_at')->nullable();
             $table->unsignedInteger('stock');
             $table->foreignId('category_id');
             $table->foreign('category_id')

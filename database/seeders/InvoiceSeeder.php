@@ -32,13 +32,15 @@ class InvoiceSeeder extends Seeder
                     ->limit(3)
                     ->get();
 
+                $data = [];
+
                 foreach ($products as $product) {
                     $quantity = random_int(2, 6);
 
                     $data[$product->id] = [
                         'quantity' => $quantity,
-                        'price' => $product->price,
-                        'subtotal' => $product->price * $quantity,
+                        'price' => (float) $product->price,
+                        'subtotal' => (float) $product->price * $quantity,
                     ];
                 }
 
