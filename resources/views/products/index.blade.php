@@ -16,12 +16,11 @@
                 @foreach ($chunk as $product)
                     <div class="col-3">
                         <div class="card">
-                            <img src="..." class="card-img-top" alt="...">
+                            <img src="{{ $product->getImageContent() }}" class="card-img-top" alt="...">
                             <div class="card-body">
-                                <h5 class="card-title">{{ $product->description }}</h5>
+                                <h5 class="card-title">{{ $product->title }}</h5>
                                 <h6 class="card-subtitle mb-2 text-muted">$ {{ $product->price }}</h6>
-                                <p class="card-text">Some quick example text to build on the card title and make up the
-                                    bulk of the card's content.</p>
+                                <p class="card-text">Facturas: {{ $product->invoices_count  }}.</p>
                                 <a href="#" class="btn btn-primary">Go somewhere</a>
                             </div>
                         </div>
