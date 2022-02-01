@@ -18,7 +18,7 @@
                         <div class="col-md-6">
                             <div class="card-body">
                                 <h5 class="card-title">Información de pago</h5>
-                                <form id="buy" action="" method="POST">
+                                <form id="buy" action="{{ route('payments.store') }}" method="POST">
                                     @csrf
                                     <div class="form-group">
                                         <label for="name">Nombre</label>
@@ -30,7 +30,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="email">Correo</label>
-                                        <input type="email" email="email" id="email" class="form-control" required>
+                                        <input type="email" name="email" id="email" class="form-control" required>
                                     </div>
                                     <div class="form-group">
                                         <label for="address">Dirección</label>
