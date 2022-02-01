@@ -38,6 +38,14 @@
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ms-auto">
+                        @if (Cart::count())
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('cart.index') }}">
+                                    <span class="badge bg-secondary">{{ Cart::count() }}</span> <em class="fas fa-shopping-cart"></em> Carrito
+                                </a>
+                            </li>
+                        @endif
+
                         <!-- Authentication Links -->
                         @guest
                             @if (Route::has('login'))
@@ -59,8 +67,8 @@
 
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
+                                        onclick="event.preventDefault();
+                                        document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
                                     </a>
 
@@ -79,5 +87,6 @@
             @yield('content')
         </main>
     </div>
+    <script src="{{ asset('js/app.js') }}"></script>
 </body>
 </html>

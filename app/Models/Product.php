@@ -9,6 +9,7 @@ use App\Constants\ImageData;
 use App\Models\ProductCategory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -17,9 +18,23 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Product extends Model
 {
+    use Sluggable;
     use HasFactory;
 
+    protected $casts = [
+        'maker' => 'array',
+    ];
+
     protected $appends = ['title'];
+
+    public function sluggable(): array
+    {
+        return [
+            'slug' => [
+                'source' => 'name'
+            ]
+        ];
+    }
 
     public function category(): BelongsTo
     {
@@ -46,28 +61,8 @@ class Product extends Model
         return $this->belongsToMany(Invoice::class);
     }
 
-    public function getImageContent(): string
+    public function scopeWhereSlug(Builder $query, string $slug): Builder
     {
-        return ImageData::PNG . $this->image->content;
-    }
-
-    public function getTitleAttribute(): string
-    {
-        return strtoupper($this->attributes['description']);
-    }
-
-    public function setDescriptionAttribute($value)
-    {
-        $this->attributes['description'] = strtolower($value);
-    }
-
-    public function scopeWithInvoiceCount(Builder $query): Builder
-    {
-        return $query->withCount('invoices');
-    }
-
-    public function scopeHasManyItems(Builder $query): Builder
-    {
-        return $query->where('stock', '>=', 10);
+        return $query->where('slug', $slug);
     }
 }
