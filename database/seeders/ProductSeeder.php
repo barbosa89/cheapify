@@ -17,11 +17,13 @@ class ProductSeeder extends Seeder
      */
     public function run()
     {
+        $user = User::inRandomOrder()->first();
+
         Product::factory()
             ->count(10)
             ->make()
-            ->each(function (Product $product) {
-                $product->user()->associate(User::inRandomOrder()->first());
+            ->each(function (Product $product) use ($user) {
+                $product->user()->associate($user);
                 $product->category()->associate(ProductCategory::inRandomOrder()->first());
                 $product->save();
 
