@@ -16,6 +16,7 @@ class CreateInvoicesTable extends Migration
     {
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
+            $table->char('reference', 32);
             $table->decimal('total', 10, 2);
             $table->enum('payment_status', (new PaymentStatus)->toArray());
             $table->foreignId('customer_id');
