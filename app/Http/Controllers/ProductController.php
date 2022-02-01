@@ -3,22 +3,31 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
-use Illuminate\View\View;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class ProductController extends Controller
 {
-    public function index(): View
+    public function show(string $slug): View
     {
-        $products = Product::with([
-                'image' => function ($query) {
-                    $query->select(['images.id', 'images.content', 'images.product_id']);
-                },
+        $product = Product::whereSlug($slug)
+            ->with([
+                'category:id,description',
+                'image:images.id,images.content,images.product_id',
             ])
-            ->withInvoiceCount()
-            ->hasManyItems()
-            ->paginate();
+            ->firstOrFail([
+                'id',
+                'slug',
+                'name',
+                'description',
+                'price',
+                'discount',
+                'maker',
+                'expired_at',
+                'stock',
+                'category_id',
+            ]);
 
-        return view('products.index', compact('products'));
+        return view('products.show', compact('product'));
     }
 }
