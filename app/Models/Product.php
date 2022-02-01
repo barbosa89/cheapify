@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Models\User;
 use App\Models\Image;
 use App\Models\Invoice;
-use App\Constants\ImageData;
 use App\Models\ProductCategory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
@@ -64,5 +63,10 @@ class Product extends Model
     public function scopeWhereSlug(Builder $query, string $slug): Builder
     {
         return $query->where('slug', $slug);
+    }
+
+    public function getMakerAttribute(): array
+    {
+        return (array) json_decode(json_decode($this->attributes['maker']));
     }
 }
