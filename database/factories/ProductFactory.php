@@ -4,7 +4,6 @@ namespace Database\Factories;
 
 use App\Models\ProductCategory;
 use App\Models\User;
-use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ProductFactory extends Factory
@@ -16,11 +15,9 @@ class ProductFactory extends Factory
      */
     public function definition()
     {
-        $description = $this->faker->sentence(3);
-
         return [
-            'description' => $description,
-            'slug' => Str::slug($description),
+            'name' => $this->faker->sentence(3),
+            'description' => $this->faker->sentence(),
             'price' => $this->faker->randomNumber(5),
             'stock' => $this->faker->numberBetween(5, 20),
             'maker' => json_encode([
