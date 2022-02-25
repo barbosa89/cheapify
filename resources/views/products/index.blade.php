@@ -2,7 +2,9 @@
 
 @section('content')
     <div class="container">
-        <admin-product-index :products='@json($products->getCollection())'></admin-product-index>
+        <div class="row">
+            <product-index :products='@json($products->getCollection())'></product-index>
+        </div>
 
         <div class="row">
             {{ $products->links() }}
