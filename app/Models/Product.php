@@ -24,8 +24,6 @@ class Product extends Model
         'maker' => 'array',
     ];
 
-    protected $appends = ['title'];
-
     public function sluggable(): array
     {
         return [
