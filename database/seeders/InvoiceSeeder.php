@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Constants\PaymentStatus;
+use App\Constants\Roles;
 use App\Models\User;
 use App\Models\Invoice;
 use App\Models\Product;
@@ -18,19 +19,26 @@ class InvoiceSeeder extends Seeder
      */
     public function run()
     {
+        $user = User::whereHas('roles', function ($query) {
+                $query->where('name', Roles::ADMIN);
+            })
+            ->first();
+
         Invoice::factory()
             ->count(20)
             ->make()
-            ->each(function (Invoice $invoice) {
-                $customer = User::inRandomOrder()->first();
-
-                $user = User::where('id', '!=', $customer->id)
+            ->each(function (Invoice $invoice) use ($user) {
+                $customer = User::whereHas('roles', function ($query) {
+                        $query->where('name', Roles::CUSTOMER);
+                    })
                     ->inRandomOrder()
                     ->first();
 
-                $products = Product::where('user_id', $user->id)
+                $products = Product::inRandomOrder()
                     ->limit(3)
                     ->get();
+
+                $currency = Currency::inRandomOrder()->first();
 
                 $data = [];
 
@@ -44,7 +52,6 @@ class InvoiceSeeder extends Seeder
                     ];
                 }
 
-                $currency = Currency::inRandomOrder()->first();
 
                 $paymentStatus = (new PaymentStatus())->toArray();
 

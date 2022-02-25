@@ -2,9 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\Image;
 use App\Models\User;
+use App\Models\Image;
 use App\Models\Product;
+use App\Constants\Roles;
 use App\Models\ProductCategory;
 use Illuminate\Database\Seeder;
 
@@ -17,10 +18,11 @@ class ProductSeeder extends Seeder
      */
     public function run()
     {
-        $user = User::inRandomOrder()->first();
+        $user = User::whereHas('roles', function ($query) {
+            $query->where('name', Roles::ADMIN);
+        })->first();
 
-        Product::factory()
-            ->count(10)
+        Product::factory(30)
             ->make()
             ->each(function (Product $product) use ($user) {
                 $product->user()->associate($user);

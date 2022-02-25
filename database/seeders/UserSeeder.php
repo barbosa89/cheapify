@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Role;
 use App\Models\User;
+use App\Constants\Roles;
 use Illuminate\Database\Seeder;
 
 class UserSeeder extends Seeder
@@ -15,18 +16,17 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        $seller = Role::where('name', 'seller')->first();
-        $customer = Role::where('name', 'customer')->first();
+        $admin = Role::where('name', Roles::ADMIN)->first();
+        $customer = Role::where('name', Roles::CUSTOMER)->first();
+
 
         User::factory()
-            ->count(6)
-            ->create()
-            ->each(function (User $user) use ($seller) {
-                $user->roles()->attach($seller);
-            });
+            ->create([
+                'name' => 'Admin',
+                'email' => 'admin@admin.com',
+            ])->roles()->attach($admin);
 
-        User::factory()
-            ->count(6)
+        User::factory(40)
             ->create()
             ->each(function (User $user) use ($customer) {
                 $user->roles()->attach($customer);
