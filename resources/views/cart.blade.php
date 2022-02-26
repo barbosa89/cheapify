@@ -8,6 +8,16 @@
             </div>
         </div>
 
+        @if (session()->has('error'))
+            <div class="row my-4">
+                <div class="col">
+                    <div class="alert alert-warning" role="alert">
+                        <strong>{{ session()->get('error') }}.</strong>
+                    </div>
+                </div>
+            </div>
+        @endif
+
         <div class="row">
             <div class="col">
                 <div class="card">
