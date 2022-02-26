@@ -59,11 +59,6 @@ class PaymentController extends Controller
 
             $invoice->products()->attach($data);
 
-            $notification = new InvoicePaid($invoice);
-
-            auth()->user()->notify($notification);
-            $invoice->user->notify($notification);
-
             Cart::destroy();
 
             DB::commit();
