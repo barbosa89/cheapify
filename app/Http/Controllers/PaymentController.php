@@ -12,11 +12,14 @@ use App\Services\Payments\PaymentProcess;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use App\Http\Requests\ProcessPaymentRequest;
 use App\Services\Payments\PaymentGatewayFactory;
+use Illuminate\Support\Facades\DB;
 
 class PaymentController extends Controller
 {
     public function store(ProcessPaymentRequest $request)
     {
+        DB::beginTransaction();
+
         try {
             $gateway = PaymentGatewayFactory::make($request->input('gateway'));
             $gateway->auth()
@@ -56,10 +59,19 @@ class PaymentController extends Controller
 
             $invoice->products()->attach($data);
 
+            $notification = new InvoicePaid($invoice);
+
+            auth()->user()->notify($notification);
+            $invoice->user->notify($notification);
+
             Cart::destroy();
+
+            DB::commit();
 
             return redirect()->route('invoices.index');
         } catch (Throwable $th) {
+            DB::rollBack();
+
             return back()->with('error', $th->getMessage());
         }
     }
