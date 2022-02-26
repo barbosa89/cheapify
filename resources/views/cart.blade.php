@@ -22,7 +22,7 @@
                                     @csrf
                                     <div class="form-group">
                                         <label for="name">Nombre</label>
-                                        <input type="text" name="name" id="name" class="form-control" required>
+                                        <input type="text" name="name" id="name" class="form-control" value="{{ auth()->user()->name }}" required>
                                     </div>
                                     <div class="form-group">
                                         <label for="document">Número de documento</label>
@@ -30,7 +30,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="email">Correo</label>
-                                        <input type="email" name="email" id="email" class="form-control" required>
+                                        <input type="email" name="email" id="email" class="form-control" value="{{ auth()->user()->email }}" required>
                                     </div>
                                     <div class="form-group">
                                         <label for="address">Dirección</label>

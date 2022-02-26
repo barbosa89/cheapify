@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use App\Constants\Roles;
 use App\Models\Product;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -63,5 +65,43 @@ class User extends Authenticatable implements MustVerifyEmail
     public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class);
+    }
+
+    public function getStatusAttribute(): string
+    {
+        return $this->attributes['enabled'] ? trans('common.status.enabled') : trans('common.status.disabled');
+    }
+
+    public function getIsAdminAttribute(): bool
+    {
+        return $this->attributes['is_admin'] = $this->hasRole(Roles::ADMIN);
+    }
+
+    public function getIsCustomerAttribute(): bool
+    {
+        return $this->attributes['is_customer'] = $this->hasRole(Roles::ADMIN);
+    }
+
+    public function scopeWhereIsAdmin(Builder $query): Builder
+    {
+        return $query->whereHas('roles', function ($query) {
+            $query->where('name', Roles::ADMIN);
+        });
+    }
+
+    public function toggle(): void
+    {
+        $this->enabled = !$this->enabled;
+    }
+
+    public function hasRole(string $roleName): bool
+    {
+        if (!$this->roles) {
+            $this->load('roles');
+        }
+
+        return $this->roles->contains(function (Role $role) use ($roleName) {
+            return $role->name === $roleName;
+        });
     }
 }

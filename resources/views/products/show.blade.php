@@ -4,7 +4,7 @@
     <div class="container">
         <div class="row my-4">
             <div class="col">
-                <p><small><a href="{{ url('/') }}">Volver</a></small></p>
+                <p><small><a href="{{ url()->previous() }}">Back</a></small></p>
             </div>
         </div>
 
