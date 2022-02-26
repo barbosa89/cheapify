@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\WelcomeController;
@@ -30,6 +31,9 @@ Route::prefix('admin')
 
 Route::middleware(['auth', 'role:customer'])
     ->group(function () {
+        Route::get('notifications/mark/all', [NotificationController::class, 'markAll'])->name('notifications.all');
+        Route::get('notifications/{notification}', [NotificationController::class, 'mark'])->name('notifications.mark');
+        Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
         Route::get('invoices/{invoice}', [InvoiceController::class, 'show'])->name('invoices.show');
         Route::get('invoices', [InvoiceController::class, 'index'])->name('invoices.index');
         Route::post('payments', [PaymentController::class, 'store'])->name('payments.store');

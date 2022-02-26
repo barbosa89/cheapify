@@ -11,8 +11,11 @@ use App\Constants\PaymentStatus;
 use App\Services\Payments\PaymentProcess;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use App\Http\Requests\ProcessPaymentRequest;
+use App\Notifications\ErrorOnCreateInvoice;
+use App\Notifications\InvoiceWasCreated;
 use App\Services\Payments\PaymentGatewayFactory;
 use Illuminate\Support\Facades\DB;
+use InvalidArgumentException;
 
 class PaymentController extends Controller
 {
@@ -61,11 +64,19 @@ class PaymentController extends Controller
 
             Cart::destroy();
 
+            throw new InvalidArgumentException("Parámetros de compra incorrectos");
+
             DB::commit();
+
+            $invoice->customer->notify(new InvoiceWasCreated($invoice));
+            $invoice->user->notify(new InvoiceWasCreated($invoice));
 
             return redirect()->route('invoices.index');
         } catch (Throwable $th) {
             DB::rollBack();
+
+            $admin = User::whereIsAdmin()->first();
+            $admin->notify(new ErrorOnCreateInvoice($th->getMessage()));
 
             return back()->with('error', $th->getMessage());
         }

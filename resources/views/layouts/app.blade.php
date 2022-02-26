@@ -61,6 +61,14 @@
                                 <a class="nav-link" href="{{ url('/') }}">Home</a>
                             </li>
 
+                            @if (Auth::user()->hasNotifications())
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('notifications.index') }}">
+                                        Notifications <span class="badge bg-secondary">{{ Auth::user()->countNotifications() }}</span>
+                                    </a>
+                                </li>
+                            @endif
+
                             @if (Auth::user()->is_admin)
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{ route('admin.users.index') }}">Users</a>

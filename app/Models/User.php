@@ -104,4 +104,25 @@ class User extends Authenticatable implements MustVerifyEmail
             return $role->name === $roleName;
         });
     }
+
+    public function countNotifications(): int
+    {
+        return $this->unreadNotifications()->count();
+    }
+
+    public function hasNotifications(): bool
+    {
+        return $this->countNotifications() > 0;
+    }
+
+    /**
+     * Route notifications for the Slack channel.
+     *
+     * @param  \Illuminate\Notifications\Notification  $notification
+     * @return string
+     */
+    public function routeNotificationForSlack($notification)
+    {
+        return config('slack.webhook');
+    }
 }

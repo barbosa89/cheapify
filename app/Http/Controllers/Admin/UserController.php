@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use App\Models\User;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\Messages\AcountWasDisabled;
 
 class UserController extends Controller
 {
@@ -25,6 +27,11 @@ class UserController extends Controller
     {
         $user->toggle();
         $user->save();
+
+        if (!$user->enabled) {
+            Notification::route('nexmo', '573185344785')
+                ->notify(new AcountWasDisabled());
+        }
 
         return back();
     }
